@@ -147,6 +147,13 @@ public class ProdutoResource {
         return produto.isPresent() ? ResponseEntity.ok(produto.get()) : ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/codigobarra/{codigobarra}")
+//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+    public Produto buscarPessoaByCodBarra(@PathVariable String codigobarra) {
+        Produto produto = produtoRepository.filtrarProdutoByCodBarra(codigobarra);
+        return produto;
+    }
+
     @PutMapping("/update/{id}")
 //    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA')")
     public ResponseEntity<Produto> atualizar(@PathVariable Long id, @Valid @RequestBody Produto produto) {

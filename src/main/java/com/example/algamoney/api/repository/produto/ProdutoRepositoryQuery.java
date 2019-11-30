@@ -24,5 +24,7 @@ public interface ProdutoRepositoryQuery {
     public List<Produto> filtrarProdutoByPromocaoById(Long codigo);
 
     public List<Produto> filtrarProdutoByPessoaById(Long codigo);
+    
+    public Produto filtrarProdutoByCodBarra(String codigoBarra);
 
 }

@@ -46,7 +46,7 @@ public class ProdutoRepositoryImpl implements ProdutoRepositoryQuery {
             Predicate paramentro = criteriaBuilder.like(criteriaBuilder.lower(nomePath), "%" + filter.getNome().toLowerCase() + "%");
             predicates.add(paramentro);
         }
-        
+
         if (filter.getPrdutoId() != null) {
             Predicate paramentro = criteriaBuilder.le(produtoIdPath, filter.getPrdutoId());
             predicates.add(paramentro);
@@ -61,7 +61,7 @@ public class ProdutoRepositoryImpl implements ProdutoRepositoryQuery {
             Predicate paramentro = criteriaBuilder.le(promocaoIdPath, filter.getPromocaoId());
             predicates.add(paramentro);
         }
-        
+
         if (filter.getPessoaId() != null) {
             Predicate paramentro = criteriaBuilder.le(pessoaIdPath, filter.getPessoaId());
             predicates.add(paramentro);
@@ -114,6 +114,13 @@ public class ProdutoRepositoryImpl implements ProdutoRepositoryQuery {
     public List<Produto> filtrarProdutos() {
         Query query = em.createQuery("SELECT p FROM Produto p ORDER BY p.id DESC");
         return query.getResultList();
+    }
+
+    @Override
+    public Produto filtrarProdutoByCodBarra(String codigoBarra) {
+        Query query = em.createQuery("SELECT p FROM Produto p WHERE p.codigoBarra =:codigoBarra");
+        query.setParameter("codigoBarra", codigoBarra);
+        return (Produto) query.getSingleResult();
     }
 
 }
