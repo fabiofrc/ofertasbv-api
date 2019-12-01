@@ -122,6 +122,13 @@ public class SubCategoriaResource {
         return subCategoria.isPresent() ? ResponseEntity.ok(subCategoria.get()) : ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/categoria/{id}")
+//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+    public List<SubCategoria> buscarPromocaoByCodigo(@PathVariable Long id) {
+        List<SubCategoria> subcategoria = subCategoriaRepository.filtrarSubcategoriasByCategoriaById(id);
+        return subcategoria;
+    }
+
     @PutMapping("/update/{id}")
 //    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA')")
     public ResponseEntity<SubCategoria> atualizar(@PathVariable Long id, @Valid @RequestBody SubCategoria subCategoria) {

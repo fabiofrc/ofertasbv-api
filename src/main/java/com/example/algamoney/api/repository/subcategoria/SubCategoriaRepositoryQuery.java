@@ -15,5 +15,6 @@ import java.util.List;
 public interface SubCategoriaRepositoryQuery {
 
     public List<SubCategoria> filtrarSubcategorias();
+    public List<SubCategoria> filtrarSubcategoriasByCategoriaById(Long codigo);
 
 }

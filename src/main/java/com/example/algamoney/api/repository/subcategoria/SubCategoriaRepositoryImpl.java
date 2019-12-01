@@ -22,9 +22,15 @@ public class SubCategoriaRepositoryImpl implements SubCategoriaRepositoryQuery {
 
     @Override
     public List<SubCategoria> filtrarSubcategorias() {
-         Query query = em.createQuery("SELECT s FROM SubCategoria s ORDER BY s.id DESC");
+        Query query = em.createQuery("SELECT s FROM SubCategoria s ORDER BY s.id DESC");
         return query.getResultList();
     }
 
- 
+    @Override
+    public List<SubCategoria> filtrarSubcategoriasByCategoriaById(Long id) {
+        Query query = em.createQuery("SELECT s FROM SubCategoria s JOIN s.categoria c WHERE c.id =:id");
+        query.setParameter("id", id);
+        return query.getResultList();
+    }
+
 }

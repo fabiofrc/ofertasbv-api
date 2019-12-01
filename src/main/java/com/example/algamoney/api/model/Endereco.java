@@ -33,12 +33,18 @@ public class Endereco implements Serializable {
 
     @Column(name = "cep")
     private String cep;
-    
+
     @Column(name = "cidade")
     private String cidade;
-    
-      @Column(name = "estado")
+
+    @Column(name = "estado")
     private String estado;
+
+    @Column(name = "latitude")
+    private double latitude;
+
+    @Column(name = "longitude")
+    private double longitude;
 
     public Long getId() {
         return id;
@@ -104,5 +110,19 @@ public class Endereco implements Serializable {
         this.estado = estado;
     }
 
-  
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 }
