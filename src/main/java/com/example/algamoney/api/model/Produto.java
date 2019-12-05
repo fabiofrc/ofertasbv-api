@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -34,8 +36,8 @@ public class Produto implements Serializable {
     @Column(name = "descricao")
     private String descricao;
 
-    @Column(name = "arquivo")
-    private String arquivo;
+    @Column(name = "foto")
+    private String foto;
 
     @Column(name = "valor_unitario")
     private double valorUnitario;
@@ -72,6 +74,10 @@ public class Produto implements Serializable {
     @JoinColumn(name = "pessoa_id", columnDefinition = "Integer", foreignKey = @ForeignKey(name = "fk_produto_pessoa"))
     private Pessoa pessoa;
 
+    //@JsonIgnore
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.EAGER)//, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Arquivo> arquivos;
+
     public Long getId() {
         return id;
     }
@@ -96,12 +102,12 @@ public class Produto implements Serializable {
         this.descricao = descricao;
     }
 
-    public String getArquivo() {
-        return arquivo;
+    public String getFoto() {
+        return foto;
     }
 
-    public void setArquivo(String arquivo) {
-        this.arquivo = arquivo;
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public double getValorUnitario() {
@@ -182,6 +188,14 @@ public class Produto implements Serializable {
 
     public void setLoja(Pessoa pessoa) {
         this.pessoa = pessoa;
+    }
+
+    public List<Arquivo> getArquivos() {
+        return arquivos;
+    }
+
+    public void setArquivos(List<Arquivo> arquivos) {
+        this.arquivos = arquivos;
     }
 
     @Override

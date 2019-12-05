@@ -8,6 +8,8 @@ package com.example.algamoney.api.repository.produto;
 import com.example.algamoney.api.model.Produto;
 import com.example.algamoney.api.repository.filter.ProdutoFilter;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
@@ -26,5 +28,7 @@ public interface ProdutoRepositoryQuery {
     public List<Produto> filtrarProdutoByPessoaById(Long codigo);
     
     public Produto filtrarProdutoByCodBarra(String codigoBarra);
+    
+     public Page<Produto> filtrarByPaginacao(String nome, Pageable pageable);
 
 }

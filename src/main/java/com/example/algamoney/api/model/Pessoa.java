@@ -1,8 +1,10 @@
 package com.example.algamoney.api.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,6 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -57,7 +60,9 @@ public class Pessoa implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataRegistro;
 
-    //@OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
+    @Column(name = "foto")
+    private String foto;
+
     @OneToOne(cascade = {CascadeType.ALL, CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "usuario_id", columnDefinition = "Integer", foreignKey = @ForeignKey(name = "fk_pessoa_usuario"), nullable = false, updatable = false)
     private Usuario usuario = new Usuario();
@@ -65,6 +70,10 @@ public class Pessoa implements Serializable {
     @ManyToOne(cascade = {CascadeType.ALL, CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "endereco_id", columnDefinition = "Integer", foreignKey = @ForeignKey(name = "fk_pessoa_endereco"), nullable = false, updatable = false)
     private Endereco endereco = new Endereco();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "pessoa", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Promocao> promocaos;
 
     public Long getId() {
         return id;
@@ -122,6 +131,14 @@ public class Pessoa implements Serializable {
         this.dataRegistro = dataRegistro;
     }
 
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
     public Usuario getUsuario() {
         return usuario;
     }
@@ -136,6 +153,14 @@ public class Pessoa implements Serializable {
 
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
+    }
+
+    public List<Promocao> getPromocaos() {
+        return promocaos;
+    }
+
+    public void setPromocaos(List<Promocao> promocaos) {
+        this.promocaos = promocaos;
     }
 
     @Transient
@@ -177,5 +202,4 @@ public class Pessoa implements Serializable {
         }
         return true;
     }
-
 }

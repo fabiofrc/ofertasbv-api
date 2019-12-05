@@ -22,5 +22,7 @@ public interface PromocaoRepositoryQuery {
     public List<Promocao> porMes(LocalDate mes);
     
     public List<Promocao> filtrarPromocoes();
+    
+    public List<Promocao> filtrarPromocoesByPessoa(Long id);
 
 }

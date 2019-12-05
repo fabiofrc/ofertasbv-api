@@ -20,9 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.algamoney.api.event.RecursoCriadoEvent;
 import com.example.algamoney.api.filedemo.payload.UploadFileResponse;
 import com.example.algamoney.api.filedemo.service.FileStorageService;
-import com.example.algamoney.api.model.Produto;
-import com.example.algamoney.api.repository.ProdutoRepository;
-import com.example.algamoney.api.repository.filter.ProdutoFilter;
+import com.example.algamoney.api.model.Arquivo;
+import com.example.algamoney.api.repository.ArquivoRepository;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -32,8 +31,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -43,13 +40,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping("/produtos")
-public class ProdutoResource {
+@RequestMapping("/arquivos")
+public class ArquivoResource {
 
-    private final Logger logger = LoggerFactory.getLogger(ProdutoResource.class);
+    private final Logger logger = LoggerFactory.getLogger(ArquivoResource.class);
 
     @Autowired
-    private ProdutoRepository produtoRepository;
+    private ArquivoRepository arquivoRepository;
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -60,41 +57,8 @@ public class ProdutoResource {
     @CrossOrigin(maxAge = 10, allowCredentials = "false") //origins = "http://localhost:8080/categorias")
     @GetMapping
 //    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
-    public List<Produto> listar() {
-        return produtoRepository.filtrarProdutos();
-    }
-
-    @GetMapping("/paginacao")
-    //@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
-    public Page<Produto> pesquisarByPage(String nome, Pageable pageable) {
-        return produtoRepository.filtrarByPaginacao(nome, pageable);
-    }
-
-    @GetMapping("/pesquisar")
-//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
-    public List<Produto> pesquisar(ProdutoFilter produtoFilter) {
-        return produtoRepository.filtrar(produtoFilter);
-    }
-
-    @GetMapping("/subcategoria/{id}")
-//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
-    public List<Produto> buscarCategoriaByCodigo(@PathVariable Long id) {
-        List<Produto> produto = produtoRepository.filtrarProdutoBySubCategoriaById(id);
-        return produto;
-    }
-
-    @GetMapping("/promocao/{id}")
-//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
-    public List<Produto> buscarPromocaoByCodigo(@PathVariable Long id) {
-        List<Produto> produto = produtoRepository.filtrarProdutoByPromocaoById(id);
-        return produto;
-    }
-
-    @GetMapping("/pessoa/{id}")
-//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
-    public List<Produto> buscarPessoaByCodigo(@PathVariable Long id) {
-        List<Produto> produto = produtoRepository.filtrarProdutoByPessoaById(id);
-        return produto;
+    public List<Arquivo> listar() {
+        return arquivoRepository.filtrarArquivos();
     }
 
     @PostMapping("/upload")
@@ -103,7 +67,7 @@ public class ProdutoResource {
         System.out.println("FileName: " + fileName);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/produtos/download/").path(fileName).toUriString();
+                .path("/arquivos/download/").path(fileName).toUriString();
 
         System.out.println("Caminho upload: " + fileDownloadUri);
 
@@ -142,39 +106,33 @@ public class ProdutoResource {
 
     @PostMapping("/create")
 //    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasScope('write')")
-    public ResponseEntity<Produto> criar(@Valid @RequestBody Produto produto, HttpServletResponse response) {
-        Produto produtoSalva = produtoRepository.save(produto);
-        publisher.publishEvent(new RecursoCriadoEvent(this, response, produtoSalva.getId()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalva);
+    public ResponseEntity<Arquivo> criar(@Valid @RequestBody Arquivo arquivo, HttpServletResponse response) {
+        Arquivo arquivoSalva = arquivoRepository.save(arquivo);
+        publisher.publishEvent(new RecursoCriadoEvent(this, response, arquivoSalva.getId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(arquivoSalva);
     }
 
     @GetMapping("/{id}")
 //    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
-    public ResponseEntity<Produto> buscarPeloCodigo(@PathVariable Long id) {
-        Optional<Produto> produto = produtoRepository.findById(id);
-        return produto.isPresent() ? ResponseEntity.ok(produto.get()) : ResponseEntity.notFound().build();
-    }
-
-    @GetMapping("/codigobarra/{codigobarra}")
-//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
-    public Produto buscarPessoaByCodBarra(@PathVariable String codigobarra) {
-        Produto produto = produtoRepository.filtrarProdutoByCodBarra(codigobarra);
-        return produto;
+    public ResponseEntity<Arquivo> buscarPeloCodigo(@PathVariable Long id) {
+        Optional<Arquivo> arquivo = arquivoRepository.findById(id);
+        return arquivo.isPresent() ? ResponseEntity.ok(arquivo.get()) : ResponseEntity.notFound().build();
     }
 
     @PutMapping("/update/{id}")
 //    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA')")
-    public ResponseEntity<Produto> atualizar(@PathVariable Long id, @Valid @RequestBody Produto produto) {
+    public ResponseEntity<Arquivo> atualizar(@PathVariable Long id, @Valid @RequestBody Arquivo arquivo) {
         try {
-            Produto produtoSalva = produtoRepository.getOne(id);
-            if (produtoSalva == null) {
+            Arquivo arquivoSalva = arquivoRepository.getOne(id);
+            if (arquivoSalva == null) {
                 throw new EmptyResultDataAccessException(1);
             }
-            BeanUtils.copyProperties(produto, produtoSalva, "id");
-            produtoRepository.save(produtoSalva);
-            return ResponseEntity.ok(produtoSalva);
+            BeanUtils.copyProperties(arquivo, arquivoSalva, "id");
+            arquivoRepository.save(arquivoSalva);
+            return ResponseEntity.ok(arquivoSalva);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
     }
+
 }

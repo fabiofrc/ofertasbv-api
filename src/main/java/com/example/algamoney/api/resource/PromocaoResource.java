@@ -50,8 +50,8 @@ public class PromocaoResource {
 
     @Autowired
     private ApplicationEventPublisher publisher;
-    
-     @Autowired
+
+    @Autowired
     private FileStorageService fileStorageService;
 
     @CrossOrigin(maxAge = 10, allowCredentials = "false") //origins = "http://localhost:8080/categorias")
@@ -61,7 +61,7 @@ public class PromocaoResource {
         return promocaoRepository.filtrarPromocoes();
     }
 
-   @PostMapping("/upload")
+    @PostMapping("/upload")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = fileStorageService.storeFile(file);
         System.out.println("FileName: " + fileName);
@@ -117,6 +117,13 @@ public class PromocaoResource {
     public ResponseEntity<Promocao> buscarPeloCodigo(@PathVariable Long id) {
         Optional<Promocao> promocao = promocaoRepository.findById(id);
         return promocao.isPresent() ? ResponseEntity.ok(promocao.get()) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/pessoa/{id}")
+//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+    public List<Promocao> buscarPessoaByCodigo(@PathVariable Long id) {
+        List<Promocao> promocao = promocaoRepository.filtrarPromocoesByPessoa(id);
+        return promocao;
     }
 
     @PutMapping("/update/{id}")

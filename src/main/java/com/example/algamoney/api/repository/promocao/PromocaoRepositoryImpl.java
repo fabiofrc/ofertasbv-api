@@ -48,4 +48,11 @@ public class PromocaoRepositoryImpl implements PromocaoRepositoryQuery {
         return query.getResultList();
     }
 
+    @Override
+    public List<Promocao> filtrarPromocoesByPessoa(Long id) {
+        Query query = em.createQuery("SELECT p FROM Promocao p JOIN p.pessoa m WHERE m.id =:id");
+        query.setParameter("id", id);
+        return query.getResultList();
+    }
+
 }

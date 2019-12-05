@@ -40,8 +40,8 @@ public class SubCategoria implements Serializable {
     @Column(name = "data_registro")
     private LocalDate dataRegistro;
 
-    @Column(name = "arquivo")
-    private String arquivo;
+    @Column(name = "foto")
+    private String foto;
 
     //@JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -80,12 +80,12 @@ public class SubCategoria implements Serializable {
         this.dataRegistro = dataRegistro;
     }
 
-    public String getArquivo() {
-        return arquivo;
+    public String getFoto() {
+        return foto;
     }
 
-    public void setArquivo(String arquivo) {
-        this.arquivo = arquivo;
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     @Override

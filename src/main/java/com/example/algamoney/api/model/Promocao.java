@@ -17,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.persistence.ManyToOne;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -36,8 +37,8 @@ public class Promocao implements Serializable {
     @Column(name = "descricao")
     private String descricao;
 
-    @Column(name = "arquivo")
-    private String arquivo;
+    @Column(name = "foto")
+    private String foto;
 
     @Column(name = "desconto")
     private double desconto;
@@ -65,6 +66,10 @@ public class Promocao implements Serializable {
             inverseForeignKey = @ForeignKey(name = "fk_produto_id"))
     private List<Produto> produtos = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "pessoa_id", columnDefinition = "Integer", foreignKey = @ForeignKey(name = "fk_promocao_pessoa"))
+    private Pessoa pessoa;
+
     public Long getId() {
         return id;
     }
@@ -89,12 +94,12 @@ public class Promocao implements Serializable {
         this.descricao = descricao;
     }
 
-    public String getArquivo() {
-        return arquivo;
+    public String getFoto() {
+        return foto;
     }
 
-    public void setArquivo(String arquivo) {
-        this.arquivo = arquivo;
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public double getDesconto() {
@@ -137,6 +142,14 @@ public class Promocao implements Serializable {
         this.produtos = produtos;
     }
 
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
+
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -166,5 +179,4 @@ public class Promocao implements Serializable {
         }
         return true;
     }
-
 }

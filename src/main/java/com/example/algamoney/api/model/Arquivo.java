@@ -1,25 +1,32 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.example.algamoney.api.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import org.springframework.format.annotation.DateTimeFormat;
 
+/**
+ *
+ * @author frc
+ */
 @Entity
-@Table(name = "categoria", uniqueConstraints = @UniqueConstraint(columnNames = "nome", name = "nome_uk"))
-public class Categoria implements Serializable {
+@Table(name = "arquivo", uniqueConstraints = @UniqueConstraint(columnNames = "nome", name = "nome_uk"))
+public class Arquivo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,17 +38,16 @@ public class Categoria implements Serializable {
     @Column(name = "nome", nullable = false)
     private String nome;
 
+    @Column(name = "data_registro")
+    private LocalDate dataRegistro;
+
     @Column(name = "foto")
     private String foto;
 
-    @Column(name = "data_registro")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dataRegistro;
-
     @JsonIgnore
-    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<SubCategoria> subCategorias;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "produto_id", columnDefinition = "Integer", foreignKey = @ForeignKey(name = "fk_arquivo_produto"))
+    private Produto produto;
 
     public Long getId() {
         return id;
@@ -59,12 +65,12 @@ public class Categoria implements Serializable {
         this.nome = nome;
     }
 
-    public String getFoto() {
-        return foto;
+    public Produto getProduto() {
+        return produto;
     }
 
-    public void setFoto(String foto) {
-        this.foto = foto;
+    public void setProdutoa(Produto produto) {
+        this.produto = produto;
     }
 
     public LocalDate getDataRegistro() {
@@ -75,12 +81,12 @@ public class Categoria implements Serializable {
         this.dataRegistro = dataRegistro;
     }
 
-    public List<SubCategoria> getSubCategorias() {
-        return subCategorias;
+    public String getFoto() {
+        return foto;
     }
 
-    public void setSubCategorias(List<SubCategoria> subCategorias) {
-        this.subCategorias = subCategorias;
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     @Override
@@ -102,7 +108,7 @@ public class Categoria implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Categoria other = (Categoria) obj;
+        Arquivo other = (Arquivo) obj;
         if (id == null) {
             if (other.id != null) {
                 return false;
@@ -112,4 +118,5 @@ public class Categoria implements Serializable {
         }
         return true;
     }
+
 }

@@ -6,6 +6,7 @@
 package com.example.algamoney.api.repository.produto;
 
 import com.example.algamoney.api.model.Produto;
+import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.repository.filter.ProdutoFilter;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 
 /**
  *
@@ -121,6 +126,54 @@ public class ProdutoRepositoryImpl implements ProdutoRepositoryQuery {
         Query query = em.createQuery("SELECT p FROM Produto p WHERE p.codigoBarra =:codigoBarra");
         query.setParameter("codigoBarra", codigoBarra);
         return (Produto) query.getSingleResult();
+    }
+
+    @Override
+    public Page<Produto> filtrarByPaginacao(String nome, Pageable pageable) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Produto> criteria = builder.createQuery(Produto.class);
+        Root<Produto> root = criteria.from(Produto.class);
+
+        Predicate[] predicates = criarRestricoes(nome, builder, root);
+        criteria.where(predicates);
+
+        TypedQuery<Produto> query = em.createQuery(criteria);
+        adicionarRestricoesDePaginacao(query, pageable);
+
+        return new PageImpl<>(query.getResultList(), pageable, total(nome));
+    }
+
+    private Predicate[] criarRestricoes(String nome, CriteriaBuilder builder,
+            Root<Produto> root) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (!StringUtils.isEmpty(nome)) {
+            predicates.add(builder.like(
+                    builder.lower(root.get("nome")), "%" + nome.toLowerCase() + "%"));
+        }
+
+        return predicates.toArray(new Predicate[predicates.size()]);
+    }
+
+    private void adicionarRestricoesDePaginacao(TypedQuery<?> query, Pageable pageable) {
+        int paginaAtual = pageable.getPageNumber();
+        int totalRegistrosPorPagina = pageable.getPageSize();
+        int primeiroRegistroDaPagina = paginaAtual * totalRegistrosPorPagina;
+
+        query.setFirstResult(primeiroRegistroDaPagina);
+        query.setMaxResults(totalRegistrosPorPagina);
+    }
+
+    private Long total(String nome) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+        Root<Produto> root = criteria.from(Produto.class);
+
+        Predicate[] predicates = criarRestricoes(nome, builder, root);
+        criteria.where(predicates);
+
+        criteria.select(builder.count(root));
+        return em.createQuery(criteria).getSingleResult();
     }
 
 }
