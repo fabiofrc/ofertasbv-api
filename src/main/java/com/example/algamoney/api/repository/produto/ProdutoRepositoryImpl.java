@@ -6,7 +6,6 @@
 package com.example.algamoney.api.repository.produto;
 
 import com.example.algamoney.api.model.Produto;
-import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.repository.filter.ProdutoFilter;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,7 +116,14 @@ public class ProdutoRepositoryImpl implements ProdutoRepositoryQuery {
 
     @Override
     public List<Produto> filtrarProdutos() {
+//        int numeroPagina = 0;
+//        int numeroResultados = 5;
+//        PageRequest pageRequest = new PageRequest(numeroPagina, numeroResultados);
+
         Query query = em.createQuery("SELECT p FROM Produto p ORDER BY p.id DESC");
+
+//        query.setFirstResult(pageRequest.getPageNumber() * pageRequest.getPageSize());
+//        query.setMaxResults(pageRequest.getPageSize());
         return query.getResultList();
     }
 
@@ -174,6 +180,21 @@ public class ProdutoRepositoryImpl implements ProdutoRepositoryQuery {
 
         criteria.select(builder.count(root));
         return em.createQuery(criteria).getSingleResult();
+    }
+
+    @Override
+    public List<Produto> filtrarProdutosById(int size, int page) {
+        Query query = em.createQuery("SELECT p FROM Produto p");
+        query.setFirstResult(size);
+        query.setMaxResults(page);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Produto> filtrarProdutosByPaginacao(Long id) {
+        Query query = em.createQuery("SELECT p FROM Produto p WHERE p.id =:id");
+        query.setParameter("id", id);
+        return query.getResultList();
     }
 
 }

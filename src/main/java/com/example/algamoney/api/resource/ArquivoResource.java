@@ -25,23 +25,44 @@ import com.example.algamoney.api.repository.ArquivoRepository;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/arquivos")
 public class ArquivoResource {
+
+//    @Bean
+//    public MultipartConfigElement multipartConfigElement() {
+//        return new MultipartConfigElement("file");
+//    }
+//
+//    @Bean
+//    public MultipartResolver multipartResolver() {
+//        return new CommonsMultipartResolver();
+//    }
+    
+//    @Autowired
+//    public ArquivoResource (FileStorageService storageService) {
+//        this.fileStorageService = storageService;
+//    }
 
     private final Logger logger = LoggerFactory.getLogger(ArquivoResource.class);
 
@@ -61,15 +82,19 @@ public class ArquivoResource {
         return arquivoRepository.filtrarArquivos();
     }
 
-    @PostMapping("/upload")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
+    @PostMapping(value = "/upload",
+            //headers = "multipart/form-data") 
+            consumes = MediaType.ALL_VALUE)
+    public UploadFileResponse uploadFile(@RequestParam(value = "file") MultipartFile file) {
         String fileName = fileStorageService.storeFile(file);
-        System.out.println("FileName: " + fileName);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/arquivos/download/").path(fileName).toUriString();
+                .path("/arquivos/download/")
+                .path(fileName)
+                .toUriString();
 
-        System.out.println("Caminho upload: " + fileDownloadUri);
+        System.out.println("FileName: " + fileName);
+        System.out.println("fileDownloadUri: " + fileDownloadUri);
 
         return new UploadFileResponse(fileName, fileDownloadUri,
                 file.getContentType(), file.getSize());

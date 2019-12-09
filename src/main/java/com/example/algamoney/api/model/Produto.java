@@ -70,12 +70,12 @@ public class Produto implements Serializable {
     private List<Promocao> promocaos;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pessoa_id", columnDefinition = "Integer", foreignKey = @ForeignKey(name = "fk_produto_pessoa"))
     private Pessoa pessoa;
 
     //@JsonIgnore
-    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.EAGER)//, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)//, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Arquivo> arquivos;
 
     public Long getId() {

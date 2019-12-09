@@ -18,6 +18,10 @@ import org.springframework.data.domain.Pageable;
 public interface ProdutoRepositoryQuery {
 
     public List<Produto> filtrarProdutos();
+    
+    public List<Produto> filtrarProdutosByPaginacao(Long id);
+    
+    public List<Produto> filtrarProdutosById(int size, int page);
 
     public List<Produto> filtrar(ProdutoFilter produtoFilter);
 

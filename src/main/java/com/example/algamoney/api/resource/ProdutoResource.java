@@ -64,6 +64,20 @@ public class ProdutoResource {
         return produtoRepository.filtrarProdutos();
     }
 
+    @CrossOrigin(maxAge = 10, allowCredentials = "false") //origins = "http://localhost:8080/categorias")
+    @GetMapping("/pag")
+//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+    public List<Produto> filtrarProdutosById(int size, int page) {
+        return produtoRepository.filtrarProdutosById(size, page);
+    }
+    
+    @CrossOrigin(maxAge = 10, allowCredentials = "false") //origins = "http://localhost:8080/categorias")
+    @GetMapping("/teste")
+//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+    public List<Produto> filtrarProdutosByPaginacao(Long id) {
+        return produtoRepository.filtrarProdutosByPaginacao(id);
+    }
+
     @GetMapping("/paginacao")
     //@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
     public Page<Produto> pesquisarByPage(String nome, Pageable pageable) {
