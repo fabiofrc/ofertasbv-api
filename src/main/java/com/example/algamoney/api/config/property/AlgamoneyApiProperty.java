@@ -2,7 +2,7 @@ package com.example.algamoney.api.config.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "file")
+@ConfigurationProperties(prefix = "file") // algamoney or file
 public class AlgamoneyApiProperty {
 
     private String originPermitida = "http://localhost:8080";

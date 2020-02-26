@@ -58,13 +58,13 @@ public class Promocao implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataFinal;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "promocao_produto", joinColumns = {
         @JoinColumn(name = "promocao_id")}, inverseJoinColumns = {
         @JoinColumn(name = "produto_id")},
             foreignKey = @ForeignKey(name = "fk_promocao_id"),
             inverseForeignKey = @ForeignKey(name = "fk_produto_id"))
-    private List<Produto> produtos = new ArrayList<>();
+    private List<Produto> produtos;// = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "pessoa_id", columnDefinition = "Integer", foreignKey = @ForeignKey(name = "fk_promocao_pessoa"))

@@ -16,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 
 @Entity
 @Table(name = "usuario")
@@ -36,7 +35,7 @@ public class Usuario implements Serializable {
     private String senha;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_permissao",
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "permissao_id"),

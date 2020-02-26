@@ -197,4 +197,25 @@ public class ProdutoRepositoryImpl implements ProdutoRepositoryQuery {
         return query.getResultList();
     }
 
+    @Override
+    public List<Produto> filtrarProdutosByNome(String nome) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Produto> query = criteriaBuilder.createQuery(Produto.class);
+        Root<Produto> n = query.from(Produto.class);
+
+        Path<String> nomePath = n.<String>get("nome");
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (nome != null) {
+            Predicate paramentro = criteriaBuilder.like(criteriaBuilder.lower(nomePath), "%" + nome.toLowerCase() + "%");
+            predicates.add(paramentro);
+        }
+
+        query.where((Predicate[]) predicates.toArray(new Predicate[0]));
+        query.orderBy(criteriaBuilder.desc(n.get("id")));
+        TypedQuery<Produto> typedQuery = em.createQuery(query);
+
+        return typedQuery.getResultList();
+    }
+
 }

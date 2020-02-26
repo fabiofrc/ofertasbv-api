@@ -64,10 +64,10 @@ public class Produto implements Serializable {
     @JoinColumn(name = "subcategoria_id", foreignKey = @ForeignKey(name = "fk_produto_subcategoria"))
     private SubCategoria subCategoria;
 
-    //@JsonIgnoreProperties("promocaos")
-    @JsonIgnore
-    @ManyToMany(mappedBy = "produtos")
-    private List<Promocao> promocaos;
+//    //@JsonIgnoreProperties("promocaos")
+//    @JsonIgnore
+//    @ManyToMany(mappedBy = "produtos")
+//    private List<Promocao> promocaos;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -75,7 +75,7 @@ public class Produto implements Serializable {
     private Pessoa pessoa;
 
     //@JsonIgnore
-    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)//, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Arquivo> arquivos;
 
     public Long getId() {
@@ -174,13 +174,13 @@ public class Produto implements Serializable {
         this.subCategoria = subCategoria;
     }
 
-    public List<Promocao> getPromocaos() {
-        return promocaos;
-    }
-
-    public void setPromocaos(List<Promocao> promocaos) {
-        this.promocaos = promocaos;
-    }
+//    public List<Promocao> getPromocaos() {
+//        return promocaos;
+//    }
+//
+//    public void setPromocaos(List<Promocao> promocaos) {
+//        this.promocaos = promocaos;
+//    }
 
     public Pessoa getpessoa() {
         return pessoa;

@@ -18,9 +18,11 @@ import org.springframework.data.domain.Pageable;
 public interface ProdutoRepositoryQuery {
 
     public List<Produto> filtrarProdutos();
-    
+
+    public List<Produto> filtrarProdutosByNome(String nome);
+
     public List<Produto> filtrarProdutosByPaginacao(Long id);
-    
+
     public List<Produto> filtrarProdutosById(int size, int page);
 
     public List<Produto> filtrar(ProdutoFilter produtoFilter);
@@ -30,9 +32,9 @@ public interface ProdutoRepositoryQuery {
     public List<Produto> filtrarProdutoByPromocaoById(Long codigo);
 
     public List<Produto> filtrarProdutoByPessoaById(Long codigo);
-    
+
     public Produto filtrarProdutoByCodBarra(String codigoBarra);
-    
-     public Page<Produto> filtrarByPaginacao(String nome, Pageable pageable);
+
+    public Page<Produto> filtrarByPaginacao(String nome, Pageable pageable);
 
 }

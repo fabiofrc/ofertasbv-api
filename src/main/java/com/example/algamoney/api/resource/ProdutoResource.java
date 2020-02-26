@@ -36,6 +36,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,53 +60,60 @@ public class ProdutoResource {
 
     @CrossOrigin(maxAge = 10, allowCredentials = "false") //origins = "http://localhost:8080/categorias")
     @GetMapping
-//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR') and #oauth2.hasScope('read')")
     public List<Produto> listar() {
         return produtoRepository.filtrarProdutos();
     }
 
     @CrossOrigin(maxAge = 10, allowCredentials = "false") //origins = "http://localhost:8080/categorias")
     @GetMapping("/pag")
-//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR') and #oauth2.hasScope('read')")
     public List<Produto> filtrarProdutosById(int size, int page) {
         return produtoRepository.filtrarProdutosById(size, page);
     }
-    
+
     @CrossOrigin(maxAge = 10, allowCredentials = "false") //origins = "http://localhost:8080/categorias")
     @GetMapping("/teste")
-//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR') and #oauth2.hasScope('read')")
     public List<Produto> filtrarProdutosByPaginacao(Long id) {
         return produtoRepository.filtrarProdutosByPaginacao(id);
     }
 
+    @CrossOrigin(maxAge = 10, allowCredentials = "false") //origins = "http://localhost:8080/categorias")
+    @GetMapping("/nome")
+//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR') and #oauth2.hasScope('read')")
+    public List<Produto> filtrarProdutosByNome(String nome) {
+        return produtoRepository.filtrarProdutosByNome(nome);
+    }
+
     @GetMapping("/paginacao")
-    //@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+    //@PreAuthorize("hasAuthority('ROLE_PESQUISAR') and #oauth2.hasScope('read')")
     public Page<Produto> pesquisarByPage(String nome, Pageable pageable) {
         return produtoRepository.filtrarByPaginacao(nome, pageable);
     }
 
     @GetMapping("/pesquisar")
-//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR') and #oauth2.hasScope('read')")
     public List<Produto> pesquisar(ProdutoFilter produtoFilter) {
         return produtoRepository.filtrar(produtoFilter);
     }
 
     @GetMapping("/subcategoria/{id}")
-//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR') and #oauth2.hasScope('read')")
     public List<Produto> buscarCategoriaByCodigo(@PathVariable Long id) {
         List<Produto> produto = produtoRepository.filtrarProdutoBySubCategoriaById(id);
         return produto;
     }
 
     @GetMapping("/promocao/{id}")
-//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR') and #oauth2.hasScope('read')")
     public List<Produto> buscarPromocaoByCodigo(@PathVariable Long id) {
         List<Produto> produto = produtoRepository.filtrarProdutoByPromocaoById(id);
         return produto;
     }
 
     @GetMapping("/pessoa/{id}")
-//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+//    @PreAuthorize("hasAuthority('ROLE_PESQUISAR') and #oauth2.hasScope('read')")
     public List<Produto> buscarPessoaByCodigo(@PathVariable Long id) {
         List<Produto> produto = produtoRepository.filtrarProdutoByPessoaById(id);
         return produto;

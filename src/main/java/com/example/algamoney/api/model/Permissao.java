@@ -1,6 +1,8 @@
 package com.example.algamoney.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,8 +23,10 @@ public class Permissao implements Serializable {
     @Column(name = "descricao")
     private String descricao;
 
-    @ManyToMany(mappedBy = "permissoes")
-    private List<Usuario> usuarios;
+//    @JsonIgnore
+//    @ManyToMany(mappedBy = "permissoes")
+//    private List<Usuario> usuarios;
+   
 
     public Long getId() {
         return id;
@@ -40,13 +44,13 @@ public class Permissao implements Serializable {
         this.descricao = descricao;
     }
 
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
+//    public List<Usuario> getUsuarios() {
+//        return usuarios;
+//    }
+//
+//    public void setUsuarios(List<Usuario> usuarios) {
+//        this.usuarios = usuarios;
+//    }
 
     @Override
     public int hashCode() {
